@@ -1,7 +1,7 @@
 package services.api
 
 import com.gu.i18n.Country
-import com.gu.identity.play.IdUser
+import com.gu.identity.play.{IdMinimalUser, IdUser}
 import com.gu.memsub.Subscriber._
 import com.gu.memsub.promo.PromoError
 import com.gu.memsub.subsv2._
@@ -41,7 +41,7 @@ trait MemberService {
   def previewUpgradeSubscription(subscriber: PaidMember, newPlan: PlanChoice)
                                 (implicit i: IdentityRequest): Future[MemberError \/ BillingSchedule]
 
-  def upgradeFreeSubscription(sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
+  def upgradeFreeSubscription(idUser: IdMinimalUser, sub: FreeMember, newTier: PaidTier, form: FreeMemberChangeForm, code: Option[CampaignCode])
                              (implicit identity: IdentityRequest): Future[MemberError \/ ContactId]
 
   def downgradeSubscription(subscriber: PaidMember): Future[MemberError \/ Unit]

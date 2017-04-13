@@ -176,8 +176,10 @@ object TierController extends Controller with ActivityTracking
     implicit val identityRequest = IdentityRequest(request)
     logger.info(s"User ${request.user.id} is attempting to upgrade from ${request.subscriber.subscription.plan.tier.name} to ${target.name}...")
 
+    val idUser = request.user
+
     def handleFree(freeMember: FreeMember)(form: FreeMemberChangeForm) = {
-      val upgrade = memberService.upgradeFreeSubscription(freeMember, target, form, CampaignCode.fromRequest)
+      val upgrade = memberService.upgradeFreeSubscription(idUser,freeMember, target, form, CampaignCode.fromRequest)
       handleErrors(upgrade) {
         logger.info(s"User ${request.user.id} successfully upgraded to ${target.name}")
         Ok(Json.obj("redirect" -> routes.TierController.upgradeThankyou(target).url))

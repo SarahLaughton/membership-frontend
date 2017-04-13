@@ -3,7 +3,7 @@ package controllers
 import actions.AuthRequest
 import com.typesafe.scalalogging.LazyLogging
 import play.api.libs.json.{JsError, JsSuccess, Json, Reads}
-import play.api.mvc.{AnyContent, Controller}
+import play.api.mvc.{AnyContent, Controller, Request}
 
 object PayPal extends Controller with LazyLogging with PayPalServiceProvider {
 
@@ -36,7 +36,7 @@ object PayPal extends Controller with LazyLogging with PayPalServiceProvider {
   }
 
   //Takes a request, parses it into a type T, passes this into serviceCall to retrieve a token then returns this as json
-  def parseJsonAndRunServiceCall[T](request: AuthRequest[AnyContent], serviceCall: (T) => String)(implicit fjs: Reads[T]) = {
+  def parseJsonAndRunServiceCall[T](request: Request[AnyContent], serviceCall: (T) => String)(implicit fjs: Reads[T]) = {
     request.body.asJson.map { json =>
 
       Json.fromJson[T](json)(fjs) match {
