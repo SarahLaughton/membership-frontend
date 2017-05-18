@@ -256,13 +256,11 @@ object Joiner extends Controller with ActivityTracking with PaymentGatewayErrorH
       }.recover {
         // errors due to user's card are logged at WARN level as they are not logic errors
         case error: Stripe.Error =>
-          salesforceService.metrics.putFailSignUpStripe(tier)
           logger.warn(s"Stripe API call returned error: \n\t$error \n\tuser=$userOpt")
           setBehaviourNote(tier.name, error.code, userOpt)
           Forbidden(Json.toJson(error))
 
         case error: PaymentGatewayError =>
-          salesforceService.metrics.putFailSignUpPayPal(tier)
           setBehaviourNote(tier.name, error.code, userOpt)
           handlePaymentGatewayError(error, user.id, tier.name, formData.deliveryAddress.countryName)
 
