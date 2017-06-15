@@ -28,18 +28,7 @@ trait Info extends Controller with LazyLogging {
 
   val CachedAndOutageProtected = CachedAction andThen PlannedOutageProtection
 
-
-  def supporterUSA = NoCacheAction { implicit request =>
-    logger.info(s"supporter-usa-impression ${abtests.SupporterLandingPageUSA.describeParticipation}")
-
-    if (abtests.SupporterLandingPageUSA.allocate(request).exists(_.showNewDesign)) {
-      supporterUSANew
-    } else {
-      supporterUSAOld
-    }
-  }
-
-  def supporterUSAOld(implicit token: play.filters.csrf.CSRF.Token, request: RequestHeader) = {
+   def supporterUSA = CachedAndOutageProtected { implicit request =>
     implicit val countryGroup = US
 
     val pageImages = Seq(
@@ -66,7 +55,7 @@ trait Info extends Controller with LazyLogging {
     val refererCookies = ReferralData.makeCookies
 
     Ok(
-      views.html.info.supporterUSAOld(
+      views.html.info.supporterUSA(
         heroImages,
         TouchpointBackend.Normal.catalog.supporter,
         PageInfo(
@@ -78,48 +67,6 @@ trait Info extends Controller with LazyLogging {
         pageImages
       )
     ).withCookies(refererCookies:_*)
-
-  }
-
-  def supporterUSANew(implicit token: play.filters.csrf.CSRF.Token, request: RequestHeader) = {
-    implicit val countryGroup = US
-
-    val heroImage = ResponsiveImageGroup(
-      name = Some("intro"),
-      metadata = Some(Grid.Metadata(
-        description = Some("Montage of The Guardian US Headlines"),
-        byline = None,
-        credit = None
-      )),
-      availableImages = ResponsiveImageGenerator("3c21e0ba85d6d060f586d0313525bd271ed0a033/0_0_1000_486", Seq(1000, 500), "png")
-    )
-
-    val heroOrientated = OrientatedImages(portrait = heroImage, landscape = heroImage)
-
-    val detailImage = ResponsiveImageGroup(
-      name = Some("intro"),
-      metadata = Some(Grid.Metadata(
-        description = Some("Your Guardian Membership certificate"),
-        byline = None,
-        credit = None
-      )),
-      availableImages = ResponsiveImageGenerator("3ece34992982eff0c5afebe7fa2c04638448b543/0_0_1080_610", Seq(1080, 500))
-    )
-
-    val detailImageOrientated = OrientatedImages(portrait = detailImage, landscape = detailImage)
-    val refererCookies = ReferralData.makeCookies
-
-    Ok(views.html.info.supporterUSANew(
-      heroOrientated,
-      TouchpointBackend.Normal.catalog.supporter,
-      PageInfo(
-        title = CopyConfig.copyTitleSupporters,
-        url = request.path,
-        description = Some(CopyConfig.copyDescriptionSupporters),
-        navigation = Nil
-      ),
-      detailImageOrientated))
-      .withCookies(refererCookies:_*)
 
   }
 
