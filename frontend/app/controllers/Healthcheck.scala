@@ -2,6 +2,7 @@ package controllers
 
 import com.github.nscala_time.time.Imports._
 import com.gu.monitoring.CloudWatchHealth
+import com.typesafe.scalalogging.StrictLogging
 import play.api.Logger.warn
 import play.api.mvc.{Action, Controller}
 import services.{GuardianLiveEventService, TouchpointBackend}
@@ -16,7 +17,7 @@ class BoolTest(name: String, exec: () => Boolean) extends Test {
   override def ok = exec()
 }
 
-object Healthcheck extends Controller {
+object Healthcheck extends Controller with StrictLogging {
   import TouchpointBackend.Normal._
 
   def tests = Seq(
@@ -27,7 +28,8 @@ object Healthcheck extends Controller {
   )
 
   def healthcheck() = Action {
-    Cached(1) {
+    logger.info("received healthcheck request")
+    val result = Cached(1) {
       val failures = tests.filterNot(_.ok)
       if (failures.isEmpty) {
         Ok("OK")
@@ -36,5 +38,7 @@ object Healthcheck extends Controller {
         ServiceUnavailable("Service Unavailable")
       }
     }
+    logger.info(s"finished healthcheck with result ${result}")
+    result
   }
 }
