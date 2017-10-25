@@ -20,7 +20,8 @@ object RedirectWithCampaignCodes {
     "INTCMP",
     "CMP",
     "mcopy",
-    "REFPVID"
+    "REFPVID",
+    "acquisitionData"
   )
 
   val internalCampaignCode = "INTCMP"
