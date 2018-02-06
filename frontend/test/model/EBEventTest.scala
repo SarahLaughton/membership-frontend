@@ -152,20 +152,19 @@ class EBEventTest extends PlaySpecification {
     }
   }
 
-  "providerOpt" should {
-    "be empty when there is no provider" in {
-      ebLiveEvent.providerOpt must beNone
+  "isPartnerEvent" should {
+    "be false when there is no provider" in {
+      ebLiveEvent.isPartnerEvent mustEqual(false)
     }
 
-    "be some when there is a valid provider" in {
+    "be true when there is a valid provider" in {
       val event = Resource.getJson("model/eventbrite/event-with-provider.json").as[EBEvent]
-      event.providerOpt.map(_.id).get mustEqual "birkbeck"
-      event.providerOpt.map(_.title).get mustEqual "Birkbeck"
+      event.isPartnerEvent mustEqual(true)
     }
 
     "be none when there is an invalid provider" in {
       val event = Resource.getJson("model/eventbrite/event-with-invalid-provider.json").as[EBEvent]
-      event.providerOpt must beNone
+      event.isPartnerEvent mustEqual(false)
     }
   }
 

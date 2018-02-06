@@ -274,13 +274,10 @@ object Eventbrite {
       else None
     }
 
-    val providerOpt = for {
+    val isPartnerEvent = (for {
       desc <- description
       m <- "<!-- provider: (\\S+) -->".r.findFirstMatchIn(desc.html)
-      providerOpt <- EBEvent.availableProviders.find(_.id == m.group(1))
-    } yield providerOpt
-
-    val isPartnerEvent = providerOpt.isDefined
+    } yield EBEvent.availableProviders.exists(_.id == m.group(1))).getOrElse(false)
 
     val mainImageUrl: Option[Uri] = for {
       desc <- description
@@ -305,14 +302,14 @@ object Eventbrite {
   object EBEvent {
 
     val availableProviders = Seq(
-      ProviderLogo("birkbeck", "Birkbeck", Asset.at("images/providers/birkbeck.svg")),
-      ProviderLogo("idler", "Idler Academy", Asset.at("images/providers/idler.png")),
-      ProviderLogo("csm", "Central Saint Martins", Asset.at("images/providers/csm.svg")),
-      ProviderLogo("tpg", "The Photographers' Gallery", Asset.at("images/providers/tpg.svg")),
-      ProviderLogo("5x15", "5x15", Asset.at("images/providers/5x15.png")),
-      ProviderLogo("moa", "Museum of Architecture", Asset.at("images/providers/moa.png")),
-      ProviderLogo("shubbak", "Shubbak Festival", Asset.at("images/providers/shubbak.svg")),
-      ProviderLogo("british-council", "British Council", Asset.at("images/providers/british-council.svg"))
+      ProviderLogo("birkbeck", "Birkbeck"),
+      ProviderLogo("idler", "Idler Academy"),
+      ProviderLogo("csm", "Central Saint Martins"),
+      ProviderLogo("tpg", "The Photographers' Gallery"),
+      ProviderLogo("5x15", "5x15"),
+      ProviderLogo("moa", "Museum of Architecture"),
+      ProviderLogo("shubbak", "Shubbak Festival"),
+      ProviderLogo("british-council", "British Council")
     )
 
     val expansions = Seq(

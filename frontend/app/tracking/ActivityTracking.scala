@@ -145,8 +145,7 @@ case class EventData(event: RichEvent) {
       event.internalTicketing.map("isCurrentlyAvailableToPaidMembersOnly" -> _.isCurrentlyAvailableToPaidMembersOnly) ++
       event.internalTicketing.flatMap(_.generalReleaseTicketOpt).map("generalReleaseTicketOpt" -> ticketClassToMap(_)) ++
       event.internalTicketing.flatMap(_.memberBenefitTicketOpt).map("memberBenefitTicketOpt" -> ticketClassToMap(_)) ++
-      event.venue.address.flatMap(a=> a.postal_code).map("postCode" -> _) ++
-      event.providerOpt.map("provider" -> _)
+      event.venue.address.flatMap(a=> a.postal_code).map("postCode" -> _)
 
     val eventMap = Map("event" -> ActivityTracking.setSubMap(dataMap))
 

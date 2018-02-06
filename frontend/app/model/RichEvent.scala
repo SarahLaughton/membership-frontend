@@ -66,7 +66,6 @@ object RichEvent {
   trait RichEvent {
     val event: EBEvent
     val detailsUrl: String
-    val logoOpt: Option[ProviderLogo]
     val imgOpt: Option[ResponsiveImageGroup]
     val socialImgUrl: Option[String]
     val gridImgUrl: Option[String]
@@ -136,7 +135,6 @@ object RichEvent {
     contentOpt: Option[Content]
   ) extends LiveEvent(image, contentOpt) {
     val metadata = EventMetadata.liveMetadata.copy(highlightsOpt = highlight)
-    val logoOpt = Some(ProviderLogo(this))
   }
 
   case class MasterclassEvent(
@@ -151,7 +149,6 @@ object RichEvent {
     val schema = EventSchema.from(this)
     val tags = event.description.map(_.html).flatMap(MasterclassEvent.extractTags).getOrElse(Nil)
     val metadata = EventMetadata.masterclassMetadata
-    val logoOpt = Some(ProviderLogo(this))
     override val header = MasterClassesHeader
     override val footer: Footer = MasterClassesFooter
     val contentOpt = None

@@ -2,7 +2,7 @@
 
 @import views.support.Asset
 
-@for(description <- event.metadata.description if event.providerOpt.isEmpty) {
+@for(description <- event.metadata.description if !event.isPartnerEvent) {
     <div class="series-detail">
         <div class="series-detail__inner l-constrained">
             <div class="series-detail__content">
