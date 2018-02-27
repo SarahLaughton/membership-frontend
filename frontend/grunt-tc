@@ -22,7 +22,8 @@ fi
 # Build the static asset files for the project
 # Files will now be found in Public folder
 ################################################################################
-
+pwd
+ls
 ${YARN_LOCATION}/yarn-v${YARN_VERSION}/bin/yarn cache clean
 ${YARN_LOCATION}/yarn-v${YARN_VERSION}/bin/yarn install
 
